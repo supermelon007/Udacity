@@ -99,11 +99,16 @@
 			"properties": {
 				"type": "MappingDataFlow",
 				"typeProperties": {
-					"sources": [],
+					"sources": [
+						{
+							"name": "source1"
+						}
+					],
 					"sinks": [],
 					"transformations": [],
 					"scriptLines": [
-						""
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false) ~> source1"
 					]
 				}
 			},
@@ -803,7 +808,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dataflow load payroll2020 to sqldb')]",
+			"name": "[concat(parameters('factoryName'), '/dataflow load payroll 2020 to sqldb')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -911,6 +916,177 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_datalake_nycpayroll_2020')]",
 				"[concat(variables('factoryId'), '/datasets/ds_sqldb_NYC_Payroll_Data_2020')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow load payroll 2021 to sqldb')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_datalake_nycpayroll_2021",
+								"type": "DatasetReference"
+							},
+							"name": "sourcedatalakenycpayroll2021"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_sqldb_NYC_Payroll_Data_2021",
+								"type": "DatasetReference"
+							},
+							"name": "sinksqldbnycpayroll2021"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          FiscalYear as string,",
+						"          PayrollNumber as string,",
+						"          AgencyCode as string,",
+						"          AgencyName as string,",
+						"          EmployeeID as string,",
+						"          LastName as string,",
+						"          FirstName as string,",
+						"          AgencyStartDate as string,",
+						"          WorkLocationBorough as string,",
+						"          TitleCode as string,",
+						"          TitleDescription as string,",
+						"          LeaveStatusasofJune30 as string,",
+						"          BaseSalary as string,",
+						"          PayBasis as string,",
+						"          RegularHours as string,",
+						"          RegularGrossPaid as string,",
+						"          OTHours as string,",
+						"          TotalOTPaid as string,",
+						"          TotalOtherPay as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> sourcedatalakenycpayroll2021",
+						"sourcedatalakenycpayroll2021 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          FiscalYear as integer,",
+						"          PayrollNumber as integer,",
+						"          AgencyCode as string,",
+						"          AgencyName as string,",
+						"          EmployeeID as string,",
+						"          LastName as string,",
+						"          FirstName as string,",
+						"          AgencyStartDate as date,",
+						"          WorkLocationBorough as string,",
+						"          TitleCode as string,",
+						"          TitleDescription as string,",
+						"          LeaveStatusasofJune30 as string,",
+						"          BaseSalary as double,",
+						"          PayBasis as string,",
+						"          RegularHours as double,",
+						"          RegularGrossPaid as double,",
+						"          OTHours as double,",
+						"          TotalOTPaid as double,",
+						"          TotalOtherPay as double",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          FiscalYear,",
+						"          PayrollNumber,",
+						"          AgencyCode,",
+						"          AgencyName,",
+						"          EmployeeID,",
+						"          LastName,",
+						"          FirstName,",
+						"          AgencyStartDate,",
+						"          WorkLocationBorough,",
+						"          TitleCode,",
+						"          TitleDescription,",
+						"          LeaveStatusasofJune30,",
+						"          BaseSalary,",
+						"          PayBasis,",
+						"          RegularHours,",
+						"          RegularGrossPaid,",
+						"          OTHours,",
+						"          TotalOTPaid,",
+						"          TotalOtherPay",
+						"     )) ~> sinksqldbnycpayroll2021"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_datalake_nycpayroll_2021')]",
+				"[concat(variables('factoryId'), '/datasets/ds_sqldb_NYC_Payroll_Data_2021')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow agency master to sqldb')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_datalake_AgencyMaster",
+								"type": "DatasetReference"
+							},
+							"name": "sourcedatalakeagencymaster"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_sqldb_NYC_Payroll_AGENCY_MD",
+								"type": "DatasetReference"
+							},
+							"name": "sinksqldbagencymaster"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          AgencyID as string,",
+						"          AgencyName as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> sourcedatalakeagencymaster",
+						"sourcedatalakeagencymaster sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          AgencyID as string,",
+						"          AgencyName as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          AgencyID,",
+						"          AgencyName",
+						"     )) ~> sinksqldbagencymaster"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_datalake_AgencyMaster')]",
+				"[concat(variables('factoryId'), '/datasets/ds_sqldb_NYC_Payroll_AGENCY_MD')]"
 			]
 		}
 	]
