@@ -35,6 +35,9 @@
 				},
 				{
 					"name": "newcolumnTotalPaid"
+				},
+				{
+					"name": "aggregate1"
 				}
 			],
 			"scriptLines": [
@@ -140,7 +143,8 @@
 				"selectsqldbpayroll2020, selectsqldbpayroll2021 union(byName: true)~> unionpayroll2020and2021",
 				"unionpayroll2020and2021 filter(toInteger(FiscalYear) >= toInteger($dataflow_param_fiscalyear)",
 				") ~> filterforfiscalyear",
-				"filterforfiscalyear derive(TotalPaid = RegularGrossPaid+TotalOTPaid+TotalOtherPay) ~> newcolumnTotalPaid"
+				"filterforfiscalyear derive(TotalPaid = RegularGrossPaid+TotalOTPaid+TotalOtherPay) ~> newcolumnTotalPaid",
+				"newcolumnTotalPaid aggregate() ~> aggregate1"
 			]
 		}
 	}
