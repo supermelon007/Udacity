@@ -41,6 +41,256 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/pipeline - from DataLake to sqldb')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow_agency",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow load payroll agency master to sqldb",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"sourcedatalakeagencymaster": {},
+									"sinksqldbagencymaster": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Data flow_emp",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow load payroll empmd to sqldb",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"sourcedatalakeempmaster": {},
+									"sinksqldbempmd": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Data flow_title",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow load payroll title master to sqldb",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"sourcedatalaketitlemaster": {},
+									"sinksqldbtitlemaster": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Data flow_payroll2020",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Data flow_emp",
+								"dependencyConditions": [
+									"Completed"
+								]
+							},
+							{
+								"activity": "Data flow_title",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow load payroll 2020 to sqldb",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"sourcetabledatalakenycpayroll2020": {},
+									"sinksqldbPayroll2020": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Data flow_payroll2021",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Data flow_agency",
+								"dependencyConditions": [
+									"Completed"
+								]
+							},
+							{
+								"activity": "Data flow_emp",
+								"dependencyConditions": [
+									"Completed"
+								]
+							},
+							{
+								"activity": "Data flow_title",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow load payroll 2021 to sqldb",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"sourcedatalakenycpayroll2021": {},
+									"sinksqldbnycpayroll2021": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Data flow_summary",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Data flow_payroll2020",
+								"dependencyConditions": [
+									"Completed"
+								]
+							},
+							{
+								"activity": "Data flow_payroll2021",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow aggregate",
+								"type": "DataFlowReference",
+								"parameters": {
+									"dataflow_param_fiscalyear": "2020"
+								},
+								"datasetParameters": {
+									"sourcesqldbpayroll2020": {},
+									"sourcesqldbpayroll2021": {},
+									"sinksqldbpayrollsummary": {},
+									"sinkdatalakedirstaging": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/dataflow load payroll agency master to sqldb')]",
+				"[concat(variables('factoryId'), '/dataflows/dataflow load payroll empmd to sqldb')]",
+				"[concat(variables('factoryId'), '/dataflows/dataflow load payroll title master to sqldb')]",
+				"[concat(variables('factoryId'), '/dataflows/dataflow load payroll 2020 to sqldb')]",
+				"[concat(variables('factoryId'), '/dataflows/dataflow load payroll 2021 to sqldb')]",
+				"[concat(variables('factoryId'), '/dataflows/dataflow aggregate')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_Synapse_NYC_Payroll_Summary')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -786,6 +1036,213 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/dataflow aggregate')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_sqldb_NYC_Payroll_Data_2020",
+								"type": "DatasetReference"
+							},
+							"name": "sourcesqldbpayroll2020"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_sqldb_NYC_Payroll_Data_2021",
+								"type": "DatasetReference"
+							},
+							"name": "sourcesqldbpayroll2021"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_sqldb_NYC_Payroll_Summary",
+								"type": "DatasetReference"
+							},
+							"name": "sinksqldbpayrollsummary"
+						},
+						{
+							"linkedService": {
+								"referenceName": "ls_azuredatalakegen2",
+								"type": "LinkedServiceReference"
+							},
+							"name": "sinkdatalakedirstaging"
+						}
+					],
+					"transformations": [
+						{
+							"name": "selectsqldbpayroll2020"
+						},
+						{
+							"name": "selectsqldbpayroll2021"
+						},
+						{
+							"name": "unionpayroll2020and2021"
+						},
+						{
+							"name": "filterforfiscalyear"
+						},
+						{
+							"name": "newcolumnTotalPaid"
+						},
+						{
+							"name": "aggregateoftotalpaid"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     dataflow_param_fiscalyear as integer (2020)",
+						"}",
+						"source(output(",
+						"          FiscalYear as integer,",
+						"          PayrollNumber as integer,",
+						"          AgencyID as string,",
+						"          AgencyName as string,",
+						"          EmployeeID as string,",
+						"          LastName as string,",
+						"          FirstName as string,",
+						"          AgencyStartDate as date,",
+						"          WorkLocationBorough as string,",
+						"          TitleCode as string,",
+						"          TitleDescription as string,",
+						"          LeaveStatusasofJune30 as string,",
+						"          BaseSalary as double,",
+						"          PayBasis as string,",
+						"          RegularHours as double,",
+						"          RegularGrossPaid as double,",
+						"          OTHours as double,",
+						"          TotalOTPaid as double,",
+						"          TotalOtherPay as double",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> sourcesqldbpayroll2020",
+						"source(output(",
+						"          FiscalYear as integer,",
+						"          PayrollNumber as integer,",
+						"          AgencyCode as string,",
+						"          AgencyName as string,",
+						"          EmployeeID as string,",
+						"          LastName as string,",
+						"          FirstName as string,",
+						"          AgencyStartDate as date,",
+						"          WorkLocationBorough as string,",
+						"          TitleCode as string,",
+						"          TitleDescription as string,",
+						"          LeaveStatusasofJune30 as string,",
+						"          BaseSalary as double,",
+						"          PayBasis as string,",
+						"          RegularHours as double,",
+						"          RegularGrossPaid as double,",
+						"          OTHours as double,",
+						"          TotalOTPaid as double,",
+						"          TotalOtherPay as double",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> sourcesqldbpayroll2021",
+						"sourcesqldbpayroll2020 select(mapColumn(",
+						"          FiscalYear,",
+						"          PayrollNumber,",
+						"          AgencyID,",
+						"          AgencyName,",
+						"          EmployeeID,",
+						"          LastName,",
+						"          FirstName,",
+						"          AgencyStartDate,",
+						"          WorkLocationBorough,",
+						"          TitleCode,",
+						"          TitleDescription,",
+						"          LeaveStatusasofJune30,",
+						"          BaseSalary,",
+						"          PayBasis,",
+						"          RegularHours,",
+						"          RegularGrossPaid,",
+						"          OTHours,",
+						"          TotalOTPaid,",
+						"          TotalOtherPay",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectsqldbpayroll2020",
+						"sourcesqldbpayroll2021 select(mapColumn(",
+						"          FiscalYear,",
+						"          PayrollNumber,",
+						"          AgencyCode,",
+						"          AgencyName,",
+						"          EmployeeID,",
+						"          LastName,",
+						"          FirstName,",
+						"          AgencyStartDate,",
+						"          WorkLocationBorough,",
+						"          TitleCode,",
+						"          TitleDescription,",
+						"          LeaveStatusasofJune30,",
+						"          BaseSalary,",
+						"          PayBasis,",
+						"          RegularHours,",
+						"          RegularGrossPaid,",
+						"          OTHours,",
+						"          TotalOTPaid,",
+						"          TotalOtherPay",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectsqldbpayroll2021",
+						"selectsqldbpayroll2020, selectsqldbpayroll2021 union(byName: true)~> unionpayroll2020and2021",
+						"unionpayroll2020and2021 filter(toInteger(FiscalYear) >= toInteger($dataflow_param_fiscalyear)) ~> filterforfiscalyear",
+						"filterforfiscalyear derive(TotalPaid = RegularGrossPaid+TotalOTPaid+TotalOtherPay) ~> newcolumnTotalPaid",
+						"newcolumnTotalPaid aggregate(groupBy(AgencyName,",
+						"          FiscalYear),",
+						"     {Sum of TotalPaid} = sum(TotalPaid)) ~> aggregateoftotalpaid",
+						"aggregateoftotalpaid sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          FiscalYear as integer,",
+						"          AgencyName as string,",
+						"          TotalPaid as double",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sinksqldbpayrollsummary",
+						"aggregateoftotalpaid sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'delimited',",
+						"     fileSystem: 'adlsnycpayroll-jiayue-h',",
+						"     folderPath: 'dirstaging',",
+						"     truncate: true,",
+						"     columnDelimiter: ',',",
+						"     escapeChar: '\\\\',",
+						"     quoteChar: '\\\"',",
+						"     columnNamesAsHeader: false,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     saveOrder: 1) ~> sinkdatalakedirstaging"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_sqldb_NYC_Payroll_Data_2020')]",
+				"[concat(variables('factoryId'), '/datasets/ds_sqldb_NYC_Payroll_Data_2021')]",
+				"[concat(variables('factoryId'), '/datasets/ds_sqldb_NYC_Payroll_Summary')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_azuredatalakegen2')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/dataflow load payroll 2020 to sqldb')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -1188,214 +1645,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_datalake_TitleMaster')]",
 				"[concat(variables('factoryId'), '/datasets/ds_sqldb_NYC_Payroll_TITLE_MD')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dataflow aggregate')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_sqldb_NYC_Payroll_Data_2020",
-								"type": "DatasetReference"
-							},
-							"name": "sourcesqldbpayroll2020"
-						},
-						{
-							"dataset": {
-								"referenceName": "ds_sqldb_NYC_Payroll_Data_2021",
-								"type": "DatasetReference"
-							},
-							"name": "sourcesqldbpayroll2021"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_sqldb_NYC_Payroll_Summary",
-								"type": "DatasetReference"
-							},
-							"name": "sinksqldbpayrollsummary"
-						},
-						{
-							"linkedService": {
-								"referenceName": "ls_azuredatalakegen2",
-								"type": "LinkedServiceReference"
-							},
-							"name": "sinkdatalakedirstaging"
-						}
-					],
-					"transformations": [
-						{
-							"name": "selectsqldbpayroll2020"
-						},
-						{
-							"name": "selectsqldbpayroll2021"
-						},
-						{
-							"name": "unionpayroll2020and2021"
-						},
-						{
-							"name": "filterforfiscalyear"
-						},
-						{
-							"name": "newcolumnTotalPaid"
-						},
-						{
-							"name": "aggregateoftotalpaid"
-						}
-					],
-					"scriptLines": [
-						"parameters{",
-						"     dataflow_param_fiscalyear as integer (2020)",
-						"}",
-						"source(output(",
-						"          FiscalYear as integer,",
-						"          PayrollNumber as integer,",
-						"          AgencyID as string,",
-						"          AgencyName as string,",
-						"          EmployeeID as string,",
-						"          LastName as string,",
-						"          FirstName as string,",
-						"          AgencyStartDate as date,",
-						"          WorkLocationBorough as string,",
-						"          TitleCode as string,",
-						"          TitleDescription as string,",
-						"          LeaveStatusasofJune30 as string,",
-						"          BaseSalary as double,",
-						"          PayBasis as string,",
-						"          RegularHours as double,",
-						"          RegularGrossPaid as double,",
-						"          OTHours as double,",
-						"          TotalOTPaid as double,",
-						"          TotalOtherPay as double",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> sourcesqldbpayroll2020",
-						"source(output(",
-						"          FiscalYear as integer,",
-						"          PayrollNumber as integer,",
-						"          AgencyCode as string,",
-						"          AgencyName as string,",
-						"          EmployeeID as string,",
-						"          LastName as string,",
-						"          FirstName as string,",
-						"          AgencyStartDate as date,",
-						"          WorkLocationBorough as string,",
-						"          TitleCode as string,",
-						"          TitleDescription as string,",
-						"          LeaveStatusasofJune30 as string,",
-						"          BaseSalary as double,",
-						"          PayBasis as string,",
-						"          RegularHours as double,",
-						"          RegularGrossPaid as double,",
-						"          OTHours as double,",
-						"          TotalOTPaid as double,",
-						"          TotalOtherPay as double",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> sourcesqldbpayroll2021",
-						"sourcesqldbpayroll2020 select(mapColumn(",
-						"          FiscalYear,",
-						"          PayrollNumber,",
-						"          AgencyID,",
-						"          AgencyName,",
-						"          EmployeeID,",
-						"          LastName,",
-						"          FirstName,",
-						"          AgencyStartDate,",
-						"          WorkLocationBorough,",
-						"          TitleCode,",
-						"          TitleDescription,",
-						"          LeaveStatusasofJune30,",
-						"          BaseSalary,",
-						"          PayBasis,",
-						"          RegularHours,",
-						"          RegularGrossPaid,",
-						"          OTHours,",
-						"          TotalOTPaid,",
-						"          TotalOtherPay",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> selectsqldbpayroll2020",
-						"sourcesqldbpayroll2021 select(mapColumn(",
-						"          FiscalYear,",
-						"          PayrollNumber,",
-						"          AgencyCode,",
-						"          AgencyName,",
-						"          EmployeeID,",
-						"          LastName,",
-						"          FirstName,",
-						"          AgencyStartDate,",
-						"          WorkLocationBorough,",
-						"          TitleCode,",
-						"          TitleDescription,",
-						"          LeaveStatusasofJune30,",
-						"          BaseSalary,",
-						"          PayBasis,",
-						"          RegularHours,",
-						"          RegularGrossPaid,",
-						"          OTHours,",
-						"          TotalOTPaid,",
-						"          TotalOtherPay",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> selectsqldbpayroll2021",
-						"selectsqldbpayroll2020, selectsqldbpayroll2021 union(byName: true)~> unionpayroll2020and2021",
-						"unionpayroll2020and2021 filter(toInteger(FiscalYear) >= toInteger($dataflow_param_fiscalyear)",
-						") ~> filterforfiscalyear",
-						"filterforfiscalyear derive(TotalPaid = RegularGrossPaid+TotalOTPaid+TotalOtherPay) ~> newcolumnTotalPaid",
-						"newcolumnTotalPaid aggregate(groupBy(AgencyName,",
-						"          FiscalYear),",
-						"     {Sum of TotalPaid} = sum(TotalPaid)) ~> aggregateoftotalpaid",
-						"aggregateoftotalpaid sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          FiscalYear as integer,",
-						"          AgencyName as string,",
-						"          TotalPaid as double",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     truncate:true,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> sinksqldbpayrollsummary",
-						"aggregateoftotalpaid sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     format: 'delimited',",
-						"     fileSystem: 'adlsnycpayroll-jiayue-h',",
-						"     folderPath: 'dirstaging',",
-						"     truncate: true,",
-						"     columnDelimiter: ',',",
-						"     escapeChar: '\\\\',",
-						"     quoteChar: '\\\"',",
-						"     columnNamesAsHeader: false,",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     saveOrder: 1) ~> sinkdatalakedirstaging"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_sqldb_NYC_Payroll_Data_2020')]",
-				"[concat(variables('factoryId'), '/datasets/ds_sqldb_NYC_Payroll_Data_2021')]",
-				"[concat(variables('factoryId'), '/datasets/ds_sqldb_NYC_Payroll_Summary')]",
-				"[concat(variables('factoryId'), '/linkedServices/ls_azuredatalakegen2')]"
 			]
 		}
 	]
