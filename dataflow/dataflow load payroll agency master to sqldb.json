@@ -1,5 +1,5 @@
 {
-	"name": "dataflow agency master to sqldb",
+	"name": "dataflow load payroll agency master to sqldb",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
