@@ -198,7 +198,7 @@
 				"     mapColumn(",
 				"          AgencyName,",
 				"          FiscalYear,",
-				"          {Sum of TotalPaid}",
+				"          TotalPaid = {Sum of TotalPaid}",
 				"     ),",
 				"     preCommands: [],",
 				"     postCommands: []) ~> sinkdatalakedirstaging"
