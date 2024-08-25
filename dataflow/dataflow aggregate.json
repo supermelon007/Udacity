@@ -21,9 +21,9 @@
 			],
 			"sinks": [
 				{
-					"dataset": {
-						"referenceName": "ds_sqldb_NYC_Payroll_Summary",
-						"type": "DatasetReference"
+					"linkedService": {
+						"referenceName": "ls_azuredatalakegen2",
+						"type": "LinkedServiceReference"
 					},
 					"name": "sinksqldbpayrollsummary"
 				},
@@ -163,25 +163,17 @@
 				"     {Sum of TotalPaid} = sum(TotalPaid)) ~> aggregateoftotalpaid",
 				"aggregateoftotalpaid sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     input(",
-				"          FiscalYear as integer,",
-				"          AgencyName as string,",
-				"          TotalPaid as double",
-				"     ),",
-				"     deletable:false,",
-				"     insertable:true,",
-				"     updateable:false,",
-				"     upsertable:false,",
-				"     truncate:true,",
-				"     format: 'table',",
+				"     format: 'delimited',",
+				"     truncate: true,",
+				"     columnDelimiter: ',',",
+				"     escapeChar: '\\\\',",
+				"     quoteChar: '\\\"',",
+				"     columnNamesAsHeader: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError',",
-				"     mapColumn(",
-				"          FiscalYear,",
-				"          AgencyName,",
-				"          TotalPaid = {Sum of TotalPaid}",
-				"     )) ~> sinksqldbpayrollsummary",
+				"     skipDuplicateMapOutputs: true) ~> sinksqldbpayrollsummary",
 				"aggregateoftotalpaid sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
