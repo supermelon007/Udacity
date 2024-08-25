@@ -132,7 +132,7 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectsqldbpayroll2021",
 				"selectsqldbpayroll2020, selectsqldbpayroll2021 union(byName: true)~> unionpayroll2020and2021",
-				"unionpayroll2020and2021 filter(toInteger(FiscalYear) >= $dataflow_param_fiscalyear) ~> filter1"
+				"unionpayroll2020and2021 filter(ERROR_FUNCTION('toInteger(FiscalYear) >= $dataflow_param_fiscalyear__NEW_LINE_N____NEW_LINE_N__toInteger(FiscalYear) >= toInteger()')) ~> filter1"
 			]
 		}
 	}
