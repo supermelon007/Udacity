@@ -1,5 +1,13 @@
 {
 	"name": "udaprodatafactory",
+	"properties": {
+		"globalParameters": {
+			"dataflow_param_fiscalyear": {
+				"type": "string",
+				"value": "2020 or 2021"
+			}
+		}
+	},
 	"location": "eastus",
 	"identity": {
 		"type": "SystemAssigned",
