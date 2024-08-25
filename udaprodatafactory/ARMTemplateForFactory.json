@@ -1131,7 +1131,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"name": "[concat(parameters('factoryName'), '/dataflow load payroll title master to sqldb')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1139,18 +1139,56 @@
 				"typeProperties": {
 					"sources": [
 						{
-							"name": "source1"
+							"dataset": {
+								"referenceName": "ds_datalake_TitleMaster",
+								"type": "DatasetReference"
+							},
+							"name": "sourcedatalaketitlemaster"
 						}
 					],
-					"sinks": [],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_sqldb_NYC_Payroll_TITLE_MD",
+								"type": "DatasetReference"
+							},
+							"name": "sinksqldbtitlemaster"
+						}
+					],
 					"transformations": [],
 					"scriptLines": [
-						"source(allowSchemaDrift: true,",
-						"     validateSchema: false) ~> source1"
+						"source(output(",
+						"          TitleCode as string,",
+						"          TitleDescription as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> sourcedatalaketitlemaster",
+						"sourcedatalaketitlemaster sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          TitleCode as string,",
+						"          TitleDescription as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          TitleCode,",
+						"          TitleDescription",
+						"     )) ~> sinksqldbtitlemaster"
 					]
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_datalake_TitleMaster')]",
+				"[concat(variables('factoryId'), '/datasets/ds_sqldb_NYC_Payroll_TITLE_MD')]"
+			]
 		}
 	]
 }
