@@ -19,9 +19,6 @@
 						"referenceName": "dataflow load payroll agency master to sqldb",
 						"type": "DataFlowReference"
 					},
-					"staging": {
-						"folderPath": ""
-					},
 					"compute": {
 						"coreCount": 8,
 						"computeType": "General"
@@ -45,9 +42,6 @@
 					"dataflow": {
 						"referenceName": "dataflow load payroll empmd to sqldb",
 						"type": "DataFlowReference"
-					},
-					"staging": {
-						"folderPath": ""
 					},
 					"compute": {
 						"coreCount": 8,
@@ -192,6 +186,13 @@
 						"parameters": {
 							"dataflow_param_fiscalyear": "2020"
 						}
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "ls_azuredatalakegen2",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "adlsnycpayroll-jiayue-h/dirstaging"
 					},
 					"compute": {
 						"coreCount": 8,
