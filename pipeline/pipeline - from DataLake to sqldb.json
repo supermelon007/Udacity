@@ -47,7 +47,7 @@
 						"type": "DataFlowReference"
 					},
 					"staging": {
-						"folderPath": "adlsnycpayroll-jiayue-h/dirstaging"
+						"folderPath": ""
 					},
 					"compute": {
 						"coreCount": 8,
@@ -57,7 +57,7 @@
 				}
 			},
 			{
-				"name": "Data flow_",
+				"name": "Data flow_title",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -69,6 +69,10 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"dataflow": {
+						"referenceName": "dataflow load payroll title master to sqldb",
+						"type": "DataFlowReference"
+					},
 					"compute": {
 						"coreCount": 8,
 						"computeType": "General"
