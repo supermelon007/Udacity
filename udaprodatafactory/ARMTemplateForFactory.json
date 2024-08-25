@@ -1008,7 +1008,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dataflow agency master to sqldb')]",
+			"name": "[concat(parameters('factoryName'), '/dataflow load payroll agency master to sqldb')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1065,6 +1065,69 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_datalake_AgencyMaster')]",
 				"[concat(variables('factoryId'), '/datasets/ds_sqldb_NYC_Payroll_AGENCY_MD')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow load payroll empmd to sqldb')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_datalake_EmpMaster",
+								"type": "DatasetReference"
+							},
+							"name": "sourcedatalakeempmaster"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_sqldb_NYC_Payroll_EMP_MD",
+								"type": "DatasetReference"
+							},
+							"name": "sinksqldbempmd"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          EmployeeID as string,",
+						"          LastName as string,",
+						"          FirstName as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> sourcedatalakeempmaster",
+						"sourcedatalakeempmaster sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          EmployeeID as string,",
+						"          LastName as string,",
+						"          FirstName as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          EmployeeID,",
+						"          LastName,",
+						"          FirstName",
+						"     )) ~> sinksqldbempmd"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_datalake_EmpMaster')]",
+				"[concat(variables('factoryId'), '/datasets/ds_sqldb_NYC_Payroll_EMP_MD')]"
 			]
 		},
 		{
