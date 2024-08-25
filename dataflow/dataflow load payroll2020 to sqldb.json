@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "dataflow load payroll2020 to sqldb",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
