@@ -22,7 +22,13 @@
 			"sinks": [],
 			"transformations": [
 				{
-					"name": "select1"
+					"name": "selectsqldbpayroll2020"
+				},
+				{
+					"name": "selectsqldbpayroll2021"
+				},
+				{
+					"name": "union1"
 				}
 			],
 			"scriptLines": [
@@ -98,7 +104,31 @@
 				"          TotalOtherPay",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"     skipDuplicateMapOutputs: true) ~> selectsqldbpayroll2020",
+				"sourcesqldbpayroll2021 select(mapColumn(",
+				"          FiscalYear,",
+				"          PayrollNumber,",
+				"          AgencyCode,",
+				"          AgencyName,",
+				"          EmployeeID,",
+				"          LastName,",
+				"          FirstName,",
+				"          AgencyStartDate,",
+				"          WorkLocationBorough,",
+				"          TitleCode,",
+				"          TitleDescription,",
+				"          LeaveStatusasofJune30,",
+				"          BaseSalary,",
+				"          PayBasis,",
+				"          RegularHours,",
+				"          RegularGrossPaid,",
+				"          OTHours,",
+				"          TotalOTPaid,",
+				"          TotalOtherPay",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectsqldbpayroll2021",
+				"selectsqldbpayroll2020, sourcesqldbpayroll2020 union(byName: true)~> union1"
 			]
 		}
 	}
