@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "dataflow load payroll 2021 to sqldb",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -79,16 +79,25 @@
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError',",
 				"     mapColumn(",
+				"          FiscalYear,",
+				"          PayrollNumber,",
 				"          AgencyCode,",
 				"          AgencyName,",
 				"          EmployeeID,",
 				"          LastName,",
 				"          FirstName,",
+				"          AgencyStartDate,",
 				"          WorkLocationBorough,",
 				"          TitleCode,",
 				"          TitleDescription,",
 				"          LeaveStatusasofJune30,",
-				"          PayBasis",
+				"          BaseSalary,",
+				"          PayBasis,",
+				"          RegularHours,",
+				"          RegularGrossPaid,",
+				"          OTHours,",
+				"          TotalOTPaid,",
+				"          TotalOtherPay",
 				"     )) ~> sinksqldbnycpayroll2021"
 			]
 		}
