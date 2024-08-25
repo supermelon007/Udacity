@@ -15,9 +15,25 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ls_azuredatalakegen2'"
 		},
+		"ls_SynapseAnalytics_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_SynapseAnalytics'"
+		},
 		"ls_azuredatalakegen2_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://udaprostorageaccount.dfs.core.windows.net/"
+		},
+		"ls_SynapseAnalytics_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "udaprosynapseworkspace-ondemand.sql.azuresynapse.net"
+		},
+		"ls_SynapseAnalytics_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "Udacity"
+		},
+		"ls_SynapseAnalytics_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "sqladminuser"
 		},
 		"containerUri": {
 			"type": "string",
@@ -52,8 +68,20 @@
 					"ls_azuredatalakegen2_accountKey": {
 						"value": "[parameters('ls_azuredatalakegen2_accountKey')]"
 					},
+					"ls_SynapseAnalytics_password": {
+						"value": "[parameters('ls_SynapseAnalytics_password')]"
+					},
 					"ls_azuredatalakegen2_properties_typeProperties_url": {
 						"value": "[parameters('ls_azuredatalakegen2_properties_typeProperties_url')]"
+					},
+					"ls_SynapseAnalytics_properties_typeProperties_server": {
+						"value": "[parameters('ls_SynapseAnalytics_properties_typeProperties_server')]"
+					},
+					"ls_SynapseAnalytics_properties_typeProperties_database": {
+						"value": "[parameters('ls_SynapseAnalytics_properties_typeProperties_database')]"
+					},
+					"ls_SynapseAnalytics_properties_typeProperties_userName": {
+						"value": "[parameters('ls_SynapseAnalytics_properties_typeProperties_userName')]"
 					}
 				}
 			},

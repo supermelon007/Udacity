@@ -15,9 +15,25 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ls_azuredatalakegen2'"
 		},
+		"ls_SynapseAnalytics_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_SynapseAnalytics'"
+		},
 		"ls_azuredatalakegen2_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://udaprostorageaccount.dfs.core.windows.net/"
+		},
+		"ls_SynapseAnalytics_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "udaprosynapseworkspace-ondemand.sql.azuresynapse.net"
+		},
+		"ls_SynapseAnalytics_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "Udacity"
+		},
+		"ls_SynapseAnalytics_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "sqladminuser"
 		}
 	},
 	"variables": {
@@ -49,6 +65,28 @@
 					"accountKey": {
 						"type": "SecureString",
 						"value": "[parameters('ls_azuredatalakegen2_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_SynapseAnalytics')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"server": "[parameters('ls_SynapseAnalytics_properties_typeProperties_server')]",
+					"database": "[parameters('ls_SynapseAnalytics_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('ls_SynapseAnalytics_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('ls_SynapseAnalytics_password')]"
 					}
 				}
 			},

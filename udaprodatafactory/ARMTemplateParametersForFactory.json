@@ -11,8 +11,20 @@
 		"ls_azuredatalakegen2_accountKey": {
 			"value": ""
 		},
+		"ls_SynapseAnalytics_password": {
+			"value": ""
+		},
 		"ls_azuredatalakegen2_properties_typeProperties_url": {
 			"value": "https://udaprostorageaccount.dfs.core.windows.net/"
+		},
+		"ls_SynapseAnalytics_properties_typeProperties_server": {
+			"value": "udaprosynapseworkspace-ondemand.sql.azuresynapse.net"
+		},
+		"ls_SynapseAnalytics_properties_typeProperties_database": {
+			"value": "Udacity"
+		},
+		"ls_SynapseAnalytics_properties_typeProperties_userName": {
+			"value": "sqladminuser"
 		}
 	}
 }
