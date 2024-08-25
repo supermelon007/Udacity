@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "dataflow load payroll title master to sqldb",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -14,7 +14,11 @@
 			],
 			"sinks": [
 				{
-					"name": "sink1"
+					"dataset": {
+						"referenceName": "ds_sqldb_NYC_Payroll_TITLE_MD",
+						"type": "DatasetReference"
+					},
+					"name": "sinksqldbtitlemaster"
 				}
 			],
 			"transformations": [],
@@ -28,8 +32,22 @@
 				"     ignoreNoFilesFound: false) ~> sourcedatalaketitlemaster",
 				"sourcedatalaketitlemaster sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     input(",
+				"          TitleCode as string,",
+				"          TitleDescription as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          TitleCode,",
+				"          TitleDescription",
+				"     )) ~> sinksqldbtitlemaster"
 			]
 		}
 	}
