@@ -86,11 +86,16 @@
 				"          EmployeeID,",
 				"          LastName,",
 				"          FirstName,",
+				"          AgencyStartDate,",
 				"          WorkLocationBorough,",
 				"          TitleCode,",
 				"          TitleDescription,",
 				"          LeaveStatusasofJune30,",
-				"          PayBasis",
+				"          BaseSalary = PayBasis,",
+				"          PayBasis,",
+				"          RegularHours,",
+				"          RegularGrossPaid,",
+				"          OTHours",
 				"     )) ~> sinksqldbPayroll2020"
 			]
 		}
