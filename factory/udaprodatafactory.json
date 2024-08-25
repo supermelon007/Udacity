@@ -4,7 +4,7 @@
 		"globalParameters": {
 			"dataflow_param_fiscalyear": {
 				"type": "string",
-				"value": "2020 or 2021"
+				"value": "2020"
 			}
 		}
 	},
