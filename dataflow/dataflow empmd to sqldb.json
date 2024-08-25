@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "dataflow empmd to sqldb",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -12,7 +12,15 @@
 					"name": "sourcedatalakeempmaster"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sqldb_NYC_Payroll_EMP_MD",
+						"type": "DatasetReference"
+					},
+					"name": "sinksqldbempmd"
+				}
+			],
 			"transformations": [],
 			"scriptLines": [
 				"source(output(",
@@ -22,7 +30,27 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> sourcedatalakeempmaster"
+				"     ignoreNoFilesFound: false) ~> sourcedatalakeempmaster",
+				"sourcedatalakeempmaster sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          EmployeeID as string,",
+				"          LastName as string,",
+				"          FirstName as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          EmployeeID,",
+				"          LastName,",
+				"          FirstName",
+				"     )) ~> sinksqldbempmd"
 			]
 		}
 	}
