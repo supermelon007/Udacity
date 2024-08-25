@@ -93,6 +93,23 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [],
+					"sinks": [],
+					"transformations": [],
+					"scriptLines": [
+						""
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_Synapse_NYC_Payroll_Summary')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -783,6 +800,117 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_AzureSqlDatabase')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow load payroll2020 to sqldb')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_datalake_nycpayroll_2020",
+								"type": "DatasetReference"
+							},
+							"name": "sourcetabledatalakenycpayroll2020"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_sqldb_NYC_Payroll_Data_2020",
+								"type": "DatasetReference"
+							},
+							"name": "sinksqldbPayroll2020"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          FiscalYear as string,",
+						"          PayrollNumber as string,",
+						"          AgencyID as string,",
+						"          AgencyName as string,",
+						"          EmployeeID as string,",
+						"          LastName as string,",
+						"          FirstName as string,",
+						"          AgencyStartDate as string,",
+						"          WorkLocationBorough as string,",
+						"          TitleCode as string,",
+						"          TitleDescription as string,",
+						"          LeaveStatusasofJune30 as string,",
+						"          BaseSalary as string,",
+						"          PayBasis as string,",
+						"          RegularHours as string,",
+						"          RegularGrossPaid as string,",
+						"          OTHours as string,",
+						"          TotalOTPaid as string,",
+						"          TotalOtherPay as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> sourcetabledatalakenycpayroll2020",
+						"sourcetabledatalakenycpayroll2020 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          FiscalYear as integer,",
+						"          PayrollNumber as integer,",
+						"          AgencyID as string,",
+						"          AgencyName as string,",
+						"          EmployeeID as string,",
+						"          LastName as string,",
+						"          FirstName as string,",
+						"          AgencyStartDate as date,",
+						"          WorkLocationBorough as string,",
+						"          TitleCode as string,",
+						"          TitleDescription as string,",
+						"          LeaveStatusasofJune30 as string,",
+						"          BaseSalary as double,",
+						"          PayBasis as string,",
+						"          RegularHours as double,",
+						"          RegularGrossPaid as double,",
+						"          OTHours as double,",
+						"          TotalOTPaid as double,",
+						"          TotalOtherPay as double",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          FiscalYear,",
+						"          PayrollNumber,",
+						"          AgencyID,",
+						"          AgencyName,",
+						"          EmployeeID,",
+						"          LastName,",
+						"          FirstName,",
+						"          AgencyStartDate,",
+						"          WorkLocationBorough,",
+						"          TitleCode,",
+						"          TitleDescription,",
+						"          LeaveStatusasofJune30,",
+						"          BaseSalary = PayBasis,",
+						"          PayBasis,",
+						"          RegularHours,",
+						"          RegularGrossPaid,",
+						"          OTHours,",
+						"          TotalOTPaid,",
+						"          TotalOtherPay",
+						"     )) ~> sinksqldbPayroll2020"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_datalake_nycpayroll_2020')]",
+				"[concat(variables('factoryId'), '/datasets/ds_sqldb_NYC_Payroll_Data_2020')]"
 			]
 		}
 	]
