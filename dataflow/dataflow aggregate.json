@@ -177,7 +177,8 @@
 				"aggregateoftotalpaid sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sinkdatalakedirstaging"
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1) ~> sinkdatalakedirstaging"
 			]
 		}
 	}
