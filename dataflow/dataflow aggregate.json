@@ -28,7 +28,7 @@
 					"name": "sinksqldbpayrollsummary"
 				},
 				{
-					"name": "sink1"
+					"name": "sinkdatalakedirstaging"
 				}
 			],
 			"transformations": [
@@ -177,7 +177,7 @@
 				"aggregateoftotalpaid sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true) ~> sinkdatalakedirstaging"
 			]
 		}
 	}
