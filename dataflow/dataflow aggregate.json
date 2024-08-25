@@ -26,6 +26,9 @@
 						"type": "DatasetReference"
 					},
 					"name": "sinksqldbpayrollsummary"
+				},
+				{
+					"name": "sink1"
 				}
 			],
 			"transformations": [
@@ -170,7 +173,11 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sinksqldbpayrollsummary"
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinksqldbpayrollsummary",
+				"aggregateoftotalpaid sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}
