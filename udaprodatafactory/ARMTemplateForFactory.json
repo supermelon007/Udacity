@@ -11,17 +11,13 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_AzureSqlDatabase'"
 		},
-		"ls_azuredatalakegen2_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'ls_azuredatalakegen2'"
-		},
 		"ls_SynapseAnalytics_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'ls_SynapseAnalytics'"
 		},
-		"ls_azuredatalakegen2_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://udaprostorageaccount.dfs.core.windows.net/"
+		"ls_azuredatalakegen2_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ls_azuredatalakegen2'"
 		},
 		"ls_SynapseAnalytics_properties_typeProperties_server": {
 			"type": "string",
@@ -34,12 +30,37 @@
 		"ls_SynapseAnalytics_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "sqladminuser"
+		},
+		"ls_azuredatalakegen2_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://udaprostorageaccount.dfs.core.windows.net/"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_Synapse_NYC_Payroll_Summary')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_SynapseAnalytics",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "NYC_Payroll_Summary"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_SynapseAnalytics')]"
+			]
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/ds_datalake_AgencyMaster')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -726,23 +747,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ls_azuredatalakegen2')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobFS",
-				"typeProperties": {
-					"url": "[parameters('ls_azuredatalakegen2_properties_typeProperties_url')]",
-					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('ls_azuredatalakegen2_accountKey')]"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/ls_SynapseAnalytics')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -759,6 +763,23 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('ls_SynapseAnalytics_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_azuredatalakegen2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('ls_azuredatalakegen2_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('ls_azuredatalakegen2_accountKey')]"
 					}
 				}
 			},

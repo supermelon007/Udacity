@@ -11,17 +11,13 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_AzureSqlDatabase'"
 		},
-		"ls_azuredatalakegen2_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'ls_azuredatalakegen2'"
-		},
 		"ls_SynapseAnalytics_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'ls_SynapseAnalytics'"
 		},
-		"ls_azuredatalakegen2_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://udaprostorageaccount.dfs.core.windows.net/"
+		"ls_azuredatalakegen2_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ls_azuredatalakegen2'"
 		},
 		"ls_SynapseAnalytics_properties_typeProperties_server": {
 			"type": "string",
@@ -34,6 +30,10 @@
 		"ls_SynapseAnalytics_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "sqladminuser"
+		},
+		"ls_azuredatalakegen2_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://udaprostorageaccount.dfs.core.windows.net/"
 		},
 		"containerUri": {
 			"type": "string",
@@ -65,14 +65,11 @@
 					"ls_AzureSqlDatabase_connectionString": {
 						"value": "[parameters('ls_AzureSqlDatabase_connectionString')]"
 					},
-					"ls_azuredatalakegen2_accountKey": {
-						"value": "[parameters('ls_azuredatalakegen2_accountKey')]"
-					},
 					"ls_SynapseAnalytics_password": {
 						"value": "[parameters('ls_SynapseAnalytics_password')]"
 					},
-					"ls_azuredatalakegen2_properties_typeProperties_url": {
-						"value": "[parameters('ls_azuredatalakegen2_properties_typeProperties_url')]"
+					"ls_azuredatalakegen2_accountKey": {
+						"value": "[parameters('ls_azuredatalakegen2_accountKey')]"
 					},
 					"ls_SynapseAnalytics_properties_typeProperties_server": {
 						"value": "[parameters('ls_SynapseAnalytics_properties_typeProperties_server')]"
@@ -82,6 +79,9 @@
 					},
 					"ls_SynapseAnalytics_properties_typeProperties_userName": {
 						"value": "[parameters('ls_SynapseAnalytics_properties_typeProperties_userName')]"
+					},
+					"ls_azuredatalakegen2_properties_typeProperties_url": {
+						"value": "[parameters('ls_azuredatalakegen2_properties_typeProperties_url')]"
 					}
 				}
 			},
