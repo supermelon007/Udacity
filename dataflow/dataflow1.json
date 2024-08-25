@@ -12,7 +12,11 @@
 					"name": "sourcetabledatalakenycpayroll2020"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"name": "sink"
+				}
+			],
 			"transformations": [],
 			"scriptLines": [
 				"source(output(",
@@ -38,7 +42,11 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> sourcetabledatalakenycpayroll2020"
+				"     ignoreNoFilesFound: false) ~> sourcetabledatalakenycpayroll2020",
+				"sourcetabledatalakenycpayroll2020 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink"
 			]
 		}
 	}
