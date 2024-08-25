@@ -19,7 +19,15 @@
 					"name": "sourcesqldbpayroll2021"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sqldb_NYC_Payroll_Summary",
+						"type": "DatasetReference"
+					},
+					"name": "sinksqldbpayrollsummary"
+				}
+			],
 			"transformations": [
 				{
 					"name": "selectsqldbpayroll2020"
@@ -146,7 +154,23 @@
 				"filterforfiscalyear derive(TotalPaid = RegularGrossPaid+TotalOTPaid+TotalOtherPay) ~> newcolumnTotalPaid",
 				"newcolumnTotalPaid aggregate(groupBy(AgencyName,",
 				"          FiscalYear),",
-				"     {Sum of TotalPaid} = sum(TotalPaid)) ~> aggregateoftotalpaid"
+				"     {Sum of TotalPaid} = sum(TotalPaid)) ~> aggregateoftotalpaid",
+				"aggregateoftotalpaid sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          FiscalYear as integer,",
+				"          AgencyName as string,",
+				"          TotalPaid as double",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinksqldbpayrollsummary"
 			]
 		}
 	}
