@@ -1,1 +1,6 @@
-{}
+{
+	"dataflow_param_fiscalyear": {
+		"type": "string",
+		"value": "2020"
+	}
+}
