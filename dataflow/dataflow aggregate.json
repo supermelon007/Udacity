@@ -144,7 +144,8 @@
 				"unionpayroll2020and2021 filter(toInteger(FiscalYear) >= toInteger($dataflow_param_fiscalyear)",
 				") ~> filterforfiscalyear",
 				"filterforfiscalyear derive(TotalPaid = RegularGrossPaid+TotalOTPaid+TotalOtherPay) ~> newcolumnTotalPaid",
-				"newcolumnTotalPaid aggregate() ~> aggregate1"
+				"newcolumnTotalPaid aggregate(groupBy(AgencyName,",
+				"          FiscalYear)) ~> aggregate1"
 			]
 		}
 	}
