@@ -1215,7 +1215,12 @@
 						"     format: 'table',",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> sinksqldbpayrollsummary",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          FiscalYear,",
+						"          AgencyName,",
+						"          TotalPaid = {Sum of TotalPaid}",
+						"     )) ~> sinksqldbpayrollsummary",
 						"aggregateoftotalpaid sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'delimited',",
@@ -1231,7 +1236,12 @@
 						"     postCommands: [],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     saveOrder: 1) ~> sinkdatalakedirstaging"
+						"     saveOrder: 1,",
+						"     mapColumn(",
+						"          AgencyName,",
+						"          FiscalYear,",
+						"          {Sum of TotalPaid}",
+						"     )) ~> sinkdatalakedirstaging"
 					]
 				}
 			},
