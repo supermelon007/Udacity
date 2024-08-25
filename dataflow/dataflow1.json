@@ -95,7 +95,9 @@
 				"          PayBasis,",
 				"          RegularHours,",
 				"          RegularGrossPaid,",
-				"          OTHours",
+				"          OTHours,",
+				"          TotalOTPaid,",
+				"          TotalOtherPay",
 				"     )) ~> sinksqldbPayroll2020"
 			]
 		}
