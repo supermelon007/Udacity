@@ -1,0 +1,36 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_datalake_TitleMaster",
+						"type": "DatasetReference"
+					},
+					"name": "sourcedatalaketitlemaster"
+				}
+			],
+			"sinks": [
+				{
+					"name": "sink1"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          TitleCode as string,",
+				"          TitleDescription as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourcedatalaketitlemaster",
+				"sourcedatalaketitlemaster sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}
