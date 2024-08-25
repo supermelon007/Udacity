@@ -31,7 +31,7 @@
 					"name": "unionpayroll2020and2021"
 				},
 				{
-					"name": "filter1"
+					"name": "filterforfiscalyear"
 				}
 			],
 			"scriptLines": [
@@ -136,7 +136,7 @@
 				"     skipDuplicateMapOutputs: true) ~> selectsqldbpayroll2021",
 				"selectsqldbpayroll2020, selectsqldbpayroll2021 union(byName: true)~> unionpayroll2020and2021",
 				"unionpayroll2020and2021 filter(toInteger(FiscalYear) >= toInteger($dataflow_param_fiscalyear)",
-				") ~> filter1"
+				") ~> filterforfiscalyear"
 			]
 		}
 	}
