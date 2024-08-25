@@ -183,6 +183,7 @@
 				"     format: 'delimited',",
 				"     fileSystem: 'adlsnycpayroll-jiayue-h',",
 				"     folderPath: 'dirstaging',",
+				"     truncate: true,",
 				"     columnDelimiter: ',',",
 				"     escapeChar: '\\\\',",
 				"     quoteChar: '\\\"',",
