@@ -28,9 +28,9 @@
 					"name": "sinksqldbpayrollsummary"
 				},
 				{
-					"linkedService": {
-						"referenceName": "ls_azuredatalakegen2",
-						"type": "LinkedServiceReference"
+					"dataset": {
+						"referenceName": "ds_Synapse_NYC_Payroll_Summary",
+						"type": "DatasetReference"
 					},
 					"name": "sinkdatalakedirstaging"
 				}
@@ -184,25 +184,24 @@
 				"     )) ~> sinksqldbpayrollsummary",
 				"aggregateoftotalpaid sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     format: 'delimited',",
-				"     fileSystem: 'adlsnycpayroll-jiayue-h',",
-				"     folderPath: 'dirstaging',",
-				"     truncate: true,",
-				"     columnDelimiter: ',',",
-				"     escapeChar: '\\\\',",
-				"     quoteChar: '\\\"',",
-				"     columnNamesAsHeader: false,",
-				"     umask: 0022,",
-				"     preCommands: [],",
-				"     postCommands: [],",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     staged: true,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     saveOrder: 1,",
+				"     errorHandlingOption: 'stopOnFirstError',",
 				"     mapColumn(",
 				"          AgencyName,",
 				"          FiscalYear,",
 				"          {Sum of TotalPaid}",
-				"     )) ~> sinkdatalakedirstaging"
+				"     ),",
+				"     preCommands: [],",
+				"     postCommands: []) ~> sinkdatalakedirstaging"
 			]
 		}
 	}
