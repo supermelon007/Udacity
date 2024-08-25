@@ -296,7 +296,13 @@
 									"sinkdatalakedirstaging": {}
 								}
 							},
-							"staging": {},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_azuredatalakegen2",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "adlsnycpayroll-jiayue-h/dirstaging"
+							},
 							"compute": {
 								"coreCount": 8,
 								"computeType": "General"
