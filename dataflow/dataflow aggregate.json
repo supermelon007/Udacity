@@ -37,7 +37,7 @@
 					"name": "newcolumnTotalPaid"
 				},
 				{
-					"name": "aggregate1"
+					"name": "aggregateoftotalpaid"
 				}
 			],
 			"scriptLines": [
@@ -145,7 +145,8 @@
 				") ~> filterforfiscalyear",
 				"filterforfiscalyear derive(TotalPaid = RegularGrossPaid+TotalOTPaid+TotalOtherPay) ~> newcolumnTotalPaid",
 				"newcolumnTotalPaid aggregate(groupBy(AgencyName,",
-				"          FiscalYear)) ~> aggregate1"
+				"          FiscalYear),",
+				"     {Sum of TotalPaid} = sum(TotalPaid)) ~> aggregateoftotalpaid"
 			]
 		}
 	}
