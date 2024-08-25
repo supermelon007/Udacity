@@ -20,7 +20,11 @@
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "union1"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          FiscalYear as integer,",
@@ -71,7 +75,8 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> sourcesqldbpayroll2021"
+				"     format: 'table') ~> sourcesqldbpayroll2021",
+				"sourcesqldbpayroll2020, sourcesqldbpayroll2021 union(byName: true)~> union1"
 			]
 		}
 	}
